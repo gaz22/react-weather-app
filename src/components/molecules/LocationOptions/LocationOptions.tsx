@@ -1,10 +1,11 @@
 import React from 'react';
 import * as S from './LocationOptions.styles';
 
+import { ILocationProps } from './types';
 import { useClickOutside } from '../../../utils/useClickOutside';
 
 export interface ILocationOptions {
-    data: any
+    data: ILocationProps[]
     loading: boolean
     error?: boolean
     handleClickItem: (e: any) => void
@@ -22,8 +23,8 @@ const LocationOptions: React.FC<ILocationOptions> = ({
     return(
         <S.LocationOptionsWrapper ref={elementRef} role="list">
             {loading ? 
-                <S.LocationOptionsItem role="listitem"> <S.Loader /> </S.LocationOptionsItem> : 
-                data && data?.slice(0,6).map((e: any, index: number)=>{
+                <S.LocationOptionsItem role="listitem"> <S.Loader data-testid="loader"/> </S.LocationOptionsItem> : 
+                data && data?.slice(0,6).map((e: ILocationProps, index: number)=>{
                     return(
                         <S.LocationOptionsItem
                             key={index}

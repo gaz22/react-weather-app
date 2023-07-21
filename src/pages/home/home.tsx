@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { QueryClient, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 
 import * as S from './home.styles';
 import Header from '../../components/molecules/Header/Header';
 import SearchInput from '../../components/molecules/SearchInput/SearchInput';
 
 import useDebounce from '../../utils/useDebounce';
-import axios from 'axios';
 import LocationOptions from '../../components/molecules/LocationOptions/LocationOptions';
 import CurrentWeather from '../../components/molecules/CurrentWeather/CurrentWeather';
 import ForecastWeather from '../../components/molecules/ForecastWeather/ ForecastWeather';
+import { fetchLocation, fetchWeatherData} from '../../api';
 
 const Home = () => {
-    const queryClient = new QueryClient();
 
     const [showResult, setShowResult] = useState<boolean>(false);
     const [currentWeather, setCurrentWeather] = useState({ name: '', main: {temp:'', feels_like: '', temp_min: '', temp_max: '', humidity: '', pressure: '' }, weather: [{ icon: '', description: ''}],wind: {speed: ''}});
     const [forecastData, setForecastData] = useState<{ data: []}>({ data:[] });
-
     const [searchQuery, setSearchQuery] = useState('');
     const debouncedSearchTerm = useDebounce(searchQuery, 200);
 
@@ -31,28 +29,16 @@ const Home = () => {
         queryFn: 
         () => {
             if (debouncedSearchTerm) {
-                return axios.get(`${process.env.REACT_APP_CURRENT_WEATHER_API_URL}geo/1.0/direct?q=${debouncedSearchTerm}&limit=5&appid=${process.env.REACT_APP_CURRENT_WEATHER_API_KEY}`).then((res: any) => res.data)
+                return fetchLocation(`${process.env.REACT_APP_CURRENT_WEATHER_API_URL}geo/1.0/direct?q=${debouncedSearchTerm}&limit=5&appid=${process.env.REACT_APP_CURRENT_WEATHER_API_KEY}`)
             }
         }
     })
     
-    const onFetchData = async(queryKey: string, endpoint: string) => {
-        return await queryClient.fetchQuery(
-            [queryKey],
-            {
-                queryFn: () =>
-                axios
-                    .get(endpoint)
-                    .then((res) => res.data)
-            }
-        );
-    }
-
     const onSelectLocation = async(e: any) => {
         setShowResult(false);
         try {          
-            const currentWeather = await onFetchData('queryCurrentWeatherData',`${process.env.REACT_APP_CURRENT_WEATHER_API_URL}/data/2.5/weather?lat=${e.lat}&lon=${e.lon}&units=metric&appid=${process.env.REACT_APP_CURRENT_WEATHER_API_KEY}`);
-            const forecasts = await onFetchData('queryForecastWeatherData', `${process.env.REACT_APP_FORECAST_WEATHER_API_URL}daily?lat=${e.lat}&lon=${e.lon}&key=${process.env.REACT_APP_FORECAST_WEATHER_API_KEY}`);
+            const currentWeather = await fetchWeatherData('queryCurrentWeatherData',`${process.env.REACT_APP_CURRENT_WEATHER_API_URL}/data/2.5/weather?lat=${e.lat}&lon=${e.lon}&units=metric&appid=${process.env.REACT_APP_CURRENT_WEATHER_API_KEY}`);
+            const forecasts = await fetchWeatherData('queryForecastWeatherData', `${process.env.REACT_APP_FORECAST_WEATHER_API_URL}daily?lat=${e.lat}&lon=${e.lon}&key=${process.env.REACT_APP_FORECAST_WEATHER_API_KEY}`);
             setForecastData(forecasts);
             setCurrentWeather(currentWeather);
         } catch (e) {

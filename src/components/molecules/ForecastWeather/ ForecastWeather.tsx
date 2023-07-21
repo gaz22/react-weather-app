@@ -1,5 +1,6 @@
 import React from 'react';
 import * as S from './ ForecastWeather.styles';
+import { Weekdays } from '../../../utils';
 
 export interface IForecastWeather {
     forecastWeatherData: { data: [] }
@@ -14,11 +15,11 @@ const ForecastWeather: React.FC<IForecastWeather> = ({ forecastWeatherData }) =>
                     <S.ForecastWeatherContainer>
                         {forecastWeatherData && forecastWeatherData?.data?.slice(1,  forecastWeatherData?.data?.length -1).map((e: any, index: number)=>{
                             const date = new Date(e.valid_date);
-
+                            
                             return(
                                 <div key={index}>
                                     <S.ForecastWeatherDescriptionLabel>
-                                        {date.getDate()} / {date.getMonth()} / {date.getFullYear()}
+                                        {Weekdays[date.getDay()]}, {date.getDate()} / {date.getMonth()}
                                     </S.ForecastWeatherDescriptionLabel>
                                     <img src={`https://cdn.weatherbit.io/static/img/icons/${e.weather.icon}.png`} alt={e.weather.description}/>
                                     <S.ForecastWeatherValue>
