@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ![me](https://raw.githubusercontent.com/gaz22/react-weather-app/06045bf2dd1527e67aeeaff9dc929b860252b2f6/weather-app.gif)
 
-After cloning this repo / branch, add .env file on the root folder (please refer to .env.development for the required keys).
+After cloning this repo / branch, add .env file on the root folder (please refer to .env.example for the required keys).
 
 ## Available Scripts
 
