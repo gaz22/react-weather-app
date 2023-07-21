@@ -6,10 +6,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 After cloning this repo / branch, add .env file on the root folder. Add the below keys to the .env file:
 
-REACT_APP_CURRENT_WEATHER_API_URL = 'http://api.openweathermap.org/'
-REACT_APP_CURRENT_WEATHER_API_KEY = # get your API Key from openweather
-REACT_APP_FORECAST_WEATHER_API_URL = 'https://api.weatherbit.io/v2.0/forecast/'
-REACT_APP_FORECAST_WEATHER_API_KEY = # get your API Key from weatherbit
+REACT_APP_CURRENT_WEATHER_API_URL = 'http://api.openweathermap.org/'\
+REACT_APP_CURRENT_WEATHER_API_KEY = # get your API Key from openweather\
+REACT_APP_FORECAST_WEATHER_API_URL = 'https://api.weatherbit.io/v2.0/forecast/'\
+REACT_APP_FORECAST_WEATHER_API_KEY = # get your API Key from weatherbit\
 
 ## Available Scripts
 
