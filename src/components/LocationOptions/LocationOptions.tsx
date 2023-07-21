@@ -2,7 +2,7 @@ import React from 'react';
 import * as S from './LocationOptions.styles';
 
 import { ILocationProps } from './types';
-import { useClickOutside } from '../../../utils/useClickOutside';
+import { useClickOutside } from '../../utils/useClickOutside';
 
 export interface ILocationOptions {
     data: ILocationProps[]

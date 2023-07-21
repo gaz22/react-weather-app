@@ -1,4 +1,14 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const rotate360 = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
 
 export const Container = styled.div`
     padding-right: 15px;
@@ -33,5 +43,15 @@ export const WeatherResultWrapper = styled.div`
   @media (min-width: 768px) {
     margin-bottom: 3.2rem;
   }
+`
+
+export const Loader = styled.div`
+  height: 0;
+  width: 0;
+  padding: 15px;
+  border: 6px solid #ccc;
+  border-right-color:  ${props => props.theme.loaderColor};
+  border-radius: 22px;
+  animation: ${rotate360} 1s infinite linear;
 `
 

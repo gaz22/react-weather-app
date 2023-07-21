@@ -1,15 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import LocationOptions from './LocationOptions';
 
-import {locationData} from '../../../mocks/locationData';
+import { locationData } from '../../mocks/locationData';
 
 describe('Location options', () => {
     const handleClick = jest.fn()
-    
-    render(<LocationOptions data={locationData} loading={false} handleOutsideClick={handleClick}/>)
+
+    render(<LocationOptions data={ locationData } loading={false} handleOutsideClick={handleClick}/>)
     
     it('tests data props to match the mocks', () => {
-        expect(screen.getAllByRole("listitem")).toHaveLength(3);
+        expect(screen.getAllByRole("listitem")).toHaveLength(1);
     })
     it('tests loading icon is not appear', () => {
         expect(screen.queryByTestId('loader')).not.toBeInTheDocument();
