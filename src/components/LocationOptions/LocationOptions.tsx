@@ -17,6 +17,7 @@ const LocationOptions: React.FC<ILocationOptions> = ({
     handleOutsideClick,
     loading, 
     data, 
+    error
 }) => {
     const elementRef = useClickOutside(()=> handleOutsideClick());
 
@@ -24,22 +25,27 @@ const LocationOptions: React.FC<ILocationOptions> = ({
         <S.LocationOptionsWrapper ref={elementRef} role="list">
             {loading ? 
                 <S.LocationOptionsItem role="listitem"> <S.Loader data-testid="loader"/> </S.LocationOptionsItem> : 
-                data && data?.slice(0,6).map((e: ILocationProps, index: number)=>{
-                    return(
-                        <S.LocationOptionsItem
-                            key={index}
-                            role="listitem"
-                            onClick={async () => {
-                                handleClickItem(e)
-                            }}
-                        >
-                            {e.name ? e.name : ''}
-                            {e.state ? `, ${e.state}` : ''}
-                            {e.country ? `, ${e.country}` : ''}
-                        </S.LocationOptionsItem>
-                
-                )
-            })}
+                <>
+                    {error ?  <h1>failed to fetch location </h1> : 
+                        data && data?.slice(0,6).map((e: ILocationProps, index: number)=>{
+                            return(
+                                <S.LocationOptionsItem
+                                    key={index}
+                                    role="listitem"
+                                    onClick={async () => {
+                                        handleClickItem(e)
+                                    }}
+                                >
+                                    {e.name ? e.name : ''}
+                                    {e.state ? `, ${e.state}` : ''}
+                                    {e.country ? `, ${e.country}` : ''}
+                                </S.LocationOptionsItem>
+                    
+                            )
+                        }
+                    )}
+                </>
+            }
         </S.LocationOptionsWrapper>
     )
 }

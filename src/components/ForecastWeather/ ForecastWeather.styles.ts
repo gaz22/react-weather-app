@@ -4,7 +4,7 @@ export const ForecastWeatherContainer = styled.div`
   display: flex;
   justify-content: space-around;
   width: 100%;
-  overflow: auto;
+  flex-wrap: wrap;
 `
 
 export const ForecastWeatherWrapper = styled.div`

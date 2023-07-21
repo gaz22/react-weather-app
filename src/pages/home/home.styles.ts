@@ -17,19 +17,14 @@ export const Container = styled.div`
     margin-left: auto;
    
     @media (min-width: 768px) {
-    
         width: 750px;
-    
     }
     @media (min-width: 992px) {
-
         width: 970px;
     }
     
     @media (min-width: 1200px) {
-
         width: 1170px;
-    
     }
 `
 
@@ -50,6 +45,7 @@ export const LoaderContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-top: 4rem;
 `
 
 export const Loader = styled.div`
