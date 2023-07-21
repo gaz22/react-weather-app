@@ -13,7 +13,7 @@ const ForecastWeather: React.FC<IForecastWeather> = ({ forecastWeatherData }) =>
                 <S.ForecastWeatherWrapper>
                     <S.SectionTitle>Forecast for the next 5 days</S.SectionTitle>
                     <S.ForecastWeatherContainer>
-                        {forecastWeatherData && forecastWeatherData?.data?.slice(1,  forecastWeatherData?.data?.length -1).map((e: any, index: number)=>{
+                        {forecastWeatherData && forecastWeatherData?.data?.slice(1,  6).map((e: any, index: number)=>{
                             const date = new Date(e.valid_date);
                             
                             return(
