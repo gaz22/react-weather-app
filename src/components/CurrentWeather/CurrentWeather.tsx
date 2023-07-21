@@ -25,7 +25,7 @@ const CurrentWeather: React.FC<ICurrentWeather> = ({ currentWeatherData }) => {
                 <S.SectionTitle>Current Weather</S.SectionTitle>
                 <S.CurrentWeatherContainer>
                     <S.CurrentWeatherStatus>
-                        <S.CurrentWeatherName>{currentWeatherData.name}</S.CurrentWeatherName>
+                        <S.CurrentWeatherName>{currentWeatherData.name || ''}</S.CurrentWeatherName>
                         <S.CurrentWeatherMainSection>
                             <img src={`https://openweathermap.org/img/wn/${currentWeatherData.weather[0].icon}@2x.png`} alt={currentWeatherData.weather[0].description}/>
                             <h6>{currentWeatherData.main.temp}<span>&#8451;</span></h6>

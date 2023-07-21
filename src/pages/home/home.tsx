@@ -12,7 +12,7 @@ import ForecastWeather from '../../components/ForecastWeather/ ForecastWeather';
 import { fetchLocation, fetchWeatherData} from '../../api';
 
 const Home = () => {
-    const [error, setError] = useState(false);
+    const [error, setError] = useState({ current: false, forecast: false});
     const [loading, setLoading] = useState(false);
 
     const [showResult, setShowResult] = useState<boolean>(false);
@@ -44,6 +44,7 @@ const Home = () => {
 
     const onSelectLocation = async(e: any) => {
         setShowResult(false);
+        setLoading(true)
         try {     
             const currentWeather = await fetchWeatherData('queryCurrentWeatherData',`${process.env.REACT_APP_CURRENT_WEATHER_API_URL}/data/2.5/weather`, {
                 params: {
@@ -52,7 +53,7 @@ const Home = () => {
                     units: 'metric',
                     appid: process.env.REACT_APP_CURRENT_WEATHER_API_KEY
                 }
-            }).catch ((e)=> console.error(e));  
+            }).catch (()=>  setError({ ...error, current: true }));  
 
             const forecasts = await fetchWeatherData('queryForecastWeatherData', `${process.env.REACT_APP_FORECAST_WEATHER_API_URL}daily`, {
                 params: {
@@ -60,10 +61,11 @@ const Home = () => {
                     lon: e.lon,
                     key: process.env.REACT_APP_FORECAST_WEATHER_API_KEY
                 }
-            }).catch ((e)=> console.error(e));
+            }).catch (()=> setError({ ...error, forecast: true }));
             
             setForecastData(forecasts);
             setCurrentWeather(currentWeather);
+            setLoading(false)
         } catch (e) {
             console.error(e);
         }
@@ -87,13 +89,22 @@ const Home = () => {
                 />
             }
             </S.SearchInputWrapper>
-            {loading ? <S.Loader data-testid="loader"/> : 
+
+            {loading ? <S.LoaderContainer><S.Loader data-testid="loader"/></S.LoaderContainer>: 
                 <>
                     <S.WeatherResultWrapper>
-                        <CurrentWeather currentWeatherData={currentWeather} />
+                        {currentWeather &&
+                            <CurrentWeather currentWeatherData={currentWeather} />
+                        }
                     </S.WeatherResultWrapper>
-                    <ForecastWeather forecastWeatherData={forecastData} />
+                    {forecastData && 
+                        <ForecastWeather forecastWeatherData={forecastData} />
+                    }
                 </>
+            }
+
+            { (error.current || error.forecast) &&
+                <h1>failed to fetch</h1>
             }
         </S.Container>
     );
