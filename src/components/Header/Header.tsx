@@ -1,7 +1,8 @@
 import React from 'react';
 import * as S from './Header.styles';
 
-export interface ISearchInput {}
+export interface ISearchInput {
+}
 
 const Header: React.FC<ISearchInput> = () => {
     return(
