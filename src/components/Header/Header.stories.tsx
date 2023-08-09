@@ -11,10 +11,9 @@ export default {
 } as ComponentMeta<typeof Header>;
 
 const Template: ComponentStory<typeof Header> = (args: any) => {
-  return <Header {...args} />;
+  return <div style={{ background: 'orange' }}><Header {...args} /> now tst added</div>;
 };
 
 export const Default = Template.bind({});
 Default.args = {
-  secondaryTitle: 'test'
 };
