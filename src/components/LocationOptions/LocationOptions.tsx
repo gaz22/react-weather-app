@@ -4,7 +4,7 @@ import * as S from './LocationOptions.styles';
 import { ILocationProps } from './types';
 import { useClickOutside } from '../../utils/useClickOutside';
 
-export interface ILocationOptions {
+export interface LocationOptionsProps {
     data: ILocationProps[]
     loading: boolean
     error?: boolean
@@ -12,7 +12,7 @@ export interface ILocationOptions {
     handleOutsideClick: () => void
 }
 
-const LocationOptions: React.FC<ILocationOptions> = ({ 
+const LocationOptions: React.FC<LocationOptionsProps> = ({ 
     handleClickItem, 
     handleOutsideClick,
     loading, 
