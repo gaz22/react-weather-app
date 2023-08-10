@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-query';
 
 import * as S from './home.styles';
@@ -9,78 +9,62 @@ import useDebounce from '../../utils/useDebounce';
 import LocationOptions from '../../components/LocationOptions/LocationOptions';
 import CurrentWeather from '../../components/CurrentWeather/CurrentWeather';
 import ForecastWeather from '../../components/ForecastWeather/ ForecastWeather';
-import { fetchLocation, fetchWeatherData} from '../../api';
+import { fetchData } from '../../api';
 
-import { reducer, ActionTypes, initialState } from './home.helper';
+import useLocation from '../../hooks/useLocation';
 
 const Home = () => {
-    const [state, dispatch] = useReducer(reducer, initialState);
-
+    const [location, setLocation] = useState<any>({ lat: undefined, lon: undefined })
     const [showResult, setShowResult] = useState<boolean>(false);
-    const [currentWeather, setCurrentWeather] = useState({ name: '', main: {temp:'', feels_like: '', temp_min: '', temp_max: '', humidity: '', pressure: '' }, weather: [{ icon: '', description: ''}],wind: {speed: ''}});
-    const [forecastData, setForecastData] = useState<{ data: []}>({ data:[] });
     const [searchQuery, setSearchQuery] = useState('');
     const debouncedSearchTerm = useDebounce(searchQuery, 200);
+    const locatioNotFound = location.lat !== undefined || location.lon !==undefined;
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setShowResult(true);
         setSearchQuery(e.target.value);
     }
 
-    const {data: locationData, isLoading: isLocationFinderLoading, status } = useQuery({
-        queryKey: ['search', debouncedSearchTerm],
+    const {data: locationData, isLoading: isLocationFinderLoading, status } = useLocation(debouncedSearchTerm);
+
+    const {data: weatherData, isLoading: isLoadingWeatherData, error: isCurrentError } = useQuery({
+        queryKey: ['weather-data', location],
+        enabled: locatioNotFound,
         queryFn: 
-        () => {
-            if (debouncedSearchTerm) {
-                return fetchLocation(`${process.env.REACT_APP_CURRENT_WEATHER_API_URL}geo/1.0/direct`, { 
+            async() => {
+                const currentWeatherData = await fetchData(`${process.env.REACT_APP_CURRENT_WEATHER_API_URL}/data/2.5/weather`, {
                     params: {
-                        q: debouncedSearchTerm,
-                        limit: 5,
+                        lat: location.lat,
+                        lon: location.lon,
+                        units: 'metric',
                         appid: process.env.REACT_APP_CURRENT_WEATHER_API_KEY
                     }
                 })
+                return {
+                    current: currentWeatherData,
+                }
             }
-        }
     })
 
-    const onSelectLocation = async(e: any) => {
-        setShowResult(false);
-        dispatch({ type: ActionTypes.CURRENT_FETCHING});
-        dispatch({type: ActionTypes.FORECAST_FETCHING});
+    const {data: forecastWeatherData, isLoading: isForecastLoading, error: isForecastError } = useQuery({
+        queryKey: ['forecast-data', location],
+        enabled: locatioNotFound,
+        queryFn: 
+            async() => {
+                
+                const forecastData = await fetchData(`${process.env.REACT_APP_FORECAST_WEATHER_API_URL}daily`, {
+                    params: {
+                        lat: location.lat,
+                        lon: location.lon,
+                        key: process.env.REACT_APP_FORECAST_WEATHER_API_KEY
+                    }
+                })
 
-        try {     
-            await fetchWeatherData('queryCurrentWeatherData',`${process.env.REACT_APP_CURRENT_WEATHER_API_URL}/data/2.5/weather`, {
-                params: {
-                    lat: e.lat,
-                    lon: e.lon,
-                    units: 'metric',
-                    appid: process.env.REACT_APP_CURRENT_WEATHER_API_KEY
+                return {
+                    forecast: forecastData,
                 }
-            })
-            .then((e)=> {
-                setCurrentWeather(e);
-                dispatch({ type: ActionTypes.CURRENT_FETCHED })
-            })
-            .catch (()=>  dispatch({ type: ActionTypes.CURRENT_ERROR }));  
-
-            await fetchWeatherData('queryForecastWeatherData', `${process.env.REACT_APP_FORECAST_WEATHER_API_URL}daily`, {
-                params: {
-                    lat: e.lat,
-                    lon: e.lon,
-                    key: process.env.REACT_APP_FORECAST_WEATHER_API_KEY
-                }
-            })
-            .then((e)=>{
-                setForecastData(e);
-                dispatch({ type: ActionTypes.FORECAST_FETCHED })
-            })
-            .catch (()=> dispatch({ type: ActionTypes.FORECAST_ERROR }));
-        } catch (e) {
-            console.error(e);
-            dispatch({ type: ActionTypes.CURRENT_ERROR });
-            dispatch({ type: ActionTypes.FORECAST_ERROR });
-        }
-    }
+            }
+    })
 
     const renderLoader = () => {
         return(
@@ -107,7 +91,9 @@ const Home = () => {
                 <LocationOptions
                     data={locationData} 
                     loading={isLocationFinderLoading} 
-                    handleClickItem={(e)=> onSelectLocation(e)}
+                    handleClickItem={(e)=> {
+                        setLocation(e);
+                    }}
                     handleOutsideClick={() => setShowResult(false)}
                     error={status === "error"}
                 />
@@ -115,25 +101,25 @@ const Home = () => {
             </S.SearchInputWrapper>
 
             <>
-                {state.currentLoading ? renderLoader():
+                {isLoadingWeatherData ? renderLoader():
                     <S.WeatherResultWrapper>
                         <>
-                            {state.currentError ? renderError('current weather') : 
+                            {isCurrentError ? renderError('current weather') : 
                             <>
-                                { currentWeather &&
-                                    <CurrentWeather currentWeatherData={currentWeather} />
+                                { weatherData?.current &&
+                                    <CurrentWeather currentWeatherData={weatherData?.current} />
                                 }
                             </>
                             }
                         </>
                     </S.WeatherResultWrapper>
                 }
-                { state.forecastLoading ? renderLoader() :
+                { isForecastLoading ? renderLoader() :
                     <>
-                        { state.forecastError ? renderError('forecast weather') : 
+                        { isForecastError ? renderError('forecast weather') : 
                             <>
-                                { forecastData && 
-                                    <ForecastWeather forecastWeatherData={forecastData} /> 
+                                { forecastWeatherData?.forecast && 
+                                    <ForecastWeather forecastWeatherData={forecastWeatherData?.forecast} /> 
                                 }
                             </>
                         }
