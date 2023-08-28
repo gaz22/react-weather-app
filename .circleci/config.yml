@@ -18,7 +18,7 @@ jobs:
 
       - run:
           name: "Print an env var stored in the Project"
-          command: echo ${PROJECT_ENV_VAR}
+          command: echo ${{ PROJECT_ENV_VAR }}
 
       - run: yarn install
 
