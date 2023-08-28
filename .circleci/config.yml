@@ -16,6 +16,10 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
+      - run:
+        name: "Print an env var stored in the Project"
+        command: echo ${PROJECT_ENV_VAR}
+
       - run: yarn install
 
       - save_cache:
