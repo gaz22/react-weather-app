@@ -1,12 +1,14 @@
-version: 2.1
-
-# Define the jobs we want to run for this project
+version: 2
 jobs:
   build:
     docker:
-      - image: cimg/base:2023.03
+      - image: node:11.10.1
+
+    working_directory: ~/repo
+
     steps:
       - checkout
+
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -25,4 +27,5 @@ jobs:
       - run: yarn test
 
       - run: yarn build
-      # - run: yarn netlify:deploy
+
+      - run: yarn netlify:deploy
