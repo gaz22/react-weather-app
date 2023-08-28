@@ -9,6 +9,8 @@ import { defautlTheme } from './theme'
 function App() {
   const queryClient = new QueryClient();
 
+  console.log('process', process.env)
+
   return (
     <ThemeProvider theme={defautlTheme}>
       <div className="App">
