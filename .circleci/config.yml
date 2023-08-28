@@ -7,12 +7,6 @@ jobs:
       - image: cimg/base:2023.03
     steps:
       - checkout
-      - run: echo "this is the build job"
-  test:
-    docker:
-      - image: cimg/base:2023.03
-    steps:
-      - checkout
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -31,5 +25,4 @@ jobs:
       - run: yarn test
 
       - run: yarn build
-
       # - run: yarn netlify:deploy
