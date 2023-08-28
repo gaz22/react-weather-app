@@ -18,7 +18,7 @@ jobs:
 
       - run:
           name: "Print an env var stored in the Project"
-          command: echo ${{ PROJECT_ENV_VAR }}
+          command: echo $REACT_APP_CURRENT_WEATHER_API_URL
 
       - run: yarn install
 
