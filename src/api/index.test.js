@@ -1,4 +1,4 @@
-import { fetchLocation, fetchWeatherData } from './index';
+import { fetchData } from './index';
 import { locationData } from '../mocks/locationData';
 import { currentWeatherData } from '../mocks/weatherData';
 
@@ -9,7 +9,7 @@ const API_ENDPOINT_WEATHER_FORECAST = `${process.env.REACT_APP_CURRENT_WEATHER_A
 
 describe("fetchLocation", () => {
   it("should successfully fetch location", async () => {
-    const result = await fetchLocation(API_ENDPOINT_LOCATION, { params: {
+    const result = await fetchData(API_ENDPOINT_LOCATION, { params: {
         q: locationSearchQuery,
         limit: 5,
         appid: process.env.REACT_APP_CURRENT_WEATHER_API_KEY
@@ -21,7 +21,7 @@ describe("fetchLocation", () => {
 
 describe("fetchWeatherData", () => {
   it("should successfully fetch weather", async () => {
-    const result = await fetchWeatherData('query', API_ENDPOINT_WEATHER_FORECAST, {
+    const result = await fetchData(API_ENDPOINT_WEATHER_FORECAST, {
         params: {
             lat: -6.1753942,
             lon: 106.827183,
