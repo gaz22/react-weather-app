@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: node:11.10.1
+      - image: node:18.10.0
 
     working_directory: ~/repo
 
@@ -28,4 +28,4 @@ jobs:
 
       - run: yarn build
 
-      # - run: yarn netlify:deploy
+      - run: yarn netlify:deploy
