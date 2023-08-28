@@ -14,7 +14,7 @@ function App() {
       <div className="App">
         <QueryClientProvider client={queryClient}>
           <Home />
-          <h1>test</h1>
+          <h1>test 1</h1>
         </QueryClientProvider>
       </div>
     </ThemeProvider>
